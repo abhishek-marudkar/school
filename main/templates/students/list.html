@@ -1,0 +1,55 @@
+{% include 'home.html' %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center">List Students</h2>
+    <a class="btn btn-dark my-3" href="{% url 'create_students' %}" role="button">Create Student</a>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Sr. No.</th>
+            <th scope="col">Students Name</th>
+            <th scope="col">Students Enrollment</th>
+            <th scope="col">Students School</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{student.name}}</td>
+            <td>{{student.enrollment}}</td>
+            <td>{{student.school}}</td>
+            <td><a class="btn btn-warning" href="{% url 'update_students' student.id %}" role="button">Edit</a>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{student.id}}">Delete</button>
+            </td>  
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal{{student.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete {{student.name}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete {{student.name}}??
+                    <form action="{% url 'delete_students' %}" id="delete_form" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{student.id}}" name="student">
+                    </form>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" onclick="document.getElementById('delete_form').submit();">Delete</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</div>
+{% endblock content %}
